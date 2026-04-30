@@ -7,8 +7,7 @@ using namespace std;
 
 // functions
 int MPS(int n, int* C, int** m);
-vector<pair<int, int>> Traceback(int n, const int* C, int* M);
-void FindChord(int i, int j, int n, const int* C, int* M, vector<pair<int, int>>& r);
+void FindChord(int i, int j, int* C, int** m, vector<pair<int, int>>& r);
 
 int main(){
     int n;
@@ -34,6 +33,15 @@ int main(){
     int mps = MPS(n, C, m);
 
     cout << mps << endl;
+
+    vector<pair<int, int>> chord;
+    FindChord(0, n - 1, C, m, chord);
+
+    sort(chord.begin(), chord.end());
+
+    for (const auto& p : chord) {
+        cout << p.first << " " << p.second << endl;
+    }
 
     // cout << n << endl;
     // for (int i = 0; i < n; i++){
@@ -65,4 +73,29 @@ int MPS(int n, int* C, int** m){
     }
 
     return m[0][n - 1];
+}
+
+void FindChord(int i, int j, int* C, int** m, vector<pair<int, int>>& r){
+    if (i >= j) return;
+
+    int l = j - i;
+    int k = C[j];
+
+    if (k == i){ // case 3
+        r.push_back({i, j});
+        FindChord(i + 1, j - 1, C, m, r);
+    }
+    else if (k < i || k > j){ // case 1
+        FindChord(i, j - 1, C, m, r);
+    }
+    else{ // case 2
+        if (m[i][l] == m[i][l - 1]){
+            FindChord(i, j - 1, C, m, r);
+        }
+        else{
+            FindChord(i, k - 1, C, m, r);
+            r.push_back({k, j});
+            FindChord(k + 1, j - 1, C, m, r);
+        }
+    }
 }
