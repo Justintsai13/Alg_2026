@@ -1,7 +1,8 @@
 #include<iostream>
 #include<vector>
 #include<algorithm>
-#include <utility>
+#include<utility>
+#include<fstream>
 using namespace std;
 
 
@@ -9,18 +10,36 @@ using namespace std;
 int MPS(int n, int* C, int** m);
 void FindChord(int i, int j, int* C, int** m, vector<pair<int, int>>& r);
 
-int main(){
+int main(int argc, char* argv[]){
+    
+    ifstream inputFile(argv[1]);
+
     int n;
-    cin >> n;
-    if ((n == 0) || (n % 2 == 1)) return 0;
+    inputFile >> n;
+
+    // cin >> n;
+    // if ((n == 0) || (n % 2 == 1)) return 0;
+
+    // int* C = new int[n];
+    // for (int i = 0; i < n / 2; i++){
+    //     int u, v;
+    //     cin >> u >> v;
+    //     C[u] = v;
+    //     C[v] = u;
+    // }
 
     int* C = new int[n];
-    for (int i = 0; i < n / 2; i++){
+    for (int i = 0; i < n / 2; ++i) {
         int u, v;
-        cin >> u >> v;
+        inputFile >> u >> v;
         C[u] = v;
         C[v] = u;
     }
+
+    // cout << n << endl;
+    // for (int i = 0; i < n; i++){
+    //     cout << C[i] << " ";
+    // }
 
     int** m = new int*[n];
     for (int i = 0; i < n; i++){
@@ -43,10 +62,6 @@ int main(){
         cout << p.first << " " << p.second << endl;
     }
 
-    // cout << n << endl;
-    // for (int i = 0; i < n; i++){
-    //     cout << C[i] << " ";
-    // }
     return 0;
 }
 
