@@ -11,11 +11,19 @@ int MPS(int n, int* C, int** m);
 void FindChord(int i, int j, int* C, int** m, vector<pair<int, int>>& r);
 
 int main(int argc, char* argv[]){
+    if (argc != 3){
+        cerr << "Usage: mps <input_file> <output_file>" << endl;
+        return 1;
+    }
     
     ifstream inputFile(argv[1]);
+    if (!inputFile.is_open()){
+        cerr << "Error: Could not open input file." << endl;
+        return 1;
+    }
 
     int n;
-    inputFile >> n;
+    if (!(inputFile >> n)) return 0;
 
     // cin >> n;
     // if ((n == 0) || (n % 2 == 1)) return 0;
@@ -29,7 +37,7 @@ int main(int argc, char* argv[]){
     // }
 
     int* C = new int[n];
-    for (int i = 0; i < n / 2; ++i) {
+    for (int i = 0; i < n / 2; ++i){
         int u, v;
         inputFile >> u >> v;
         C[u] = v;
@@ -50,18 +58,30 @@ int main(int argc, char* argv[]){
     }
 
     int mps = MPS(n, C, m);
-
-    cout << mps << endl;
-
     vector<pair<int, int>> chord;
     FindChord(0, n - 1, C, m, chord);
-
     sort(chord.begin(), chord.end());
 
-    for (const auto& p : chord) {
-        cout << p.first << " " << p.second << endl;
+    ofstream outputFile(argv[2]);
+    if (!outputFile.is_open()){
+        cerr << "Error: Could not open output file." << endl;
+        return 1;
     }
 
+    outputFile << mps << "\n";
+    for (const auto& p : chord){
+        outputFile << p.first << " " << p.second << "\n";
+    }
+    outputFile.close();
+
+    // cout << mps << endl;
+    // for (const auto& p : chord){
+    //     cout << p.first << " " << p.second << endl;
+    // }
+
+    for (int i = 0; i < n; i++) delete[] m[i];
+    delete[] m;
+    delete[] C;
     return 0;
 }
 
